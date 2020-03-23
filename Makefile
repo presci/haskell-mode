@@ -36,7 +36,7 @@ ELCHECKS := $(wildcard tests/*-tests.el)
 
 AUTOLOADS = haskell-mode-autoloads.el
 
-PKG_DIST_FILES = $(ELFILES) logo.svg NEWS haskell-mode.info dir
+PKG_DIST_FILES = $(ELFILES) logo.svg NEWS dir # haskell-mode.info dir
 
 .PHONY: all compile info clean check check-emacs-version
 
@@ -44,7 +44,7 @@ all: check-emacs-version compile $(AUTOLOADS) info
 
 check-emacs-version :
 	$(BATCH) --eval "(when (version< emacs-version \"25.1\")				\
-                            (message \"Error: haskell-mode requires Emacs 25.1 or later\")	\
+                            (message \"Error: haskell-mode requires Emacs 25.1 or later\"\
                             (message \"Your version of Emacs is %s\" emacs-version)		\
                             (message \"Found as '$(EMACS)'\")					\
                             (message \"Use one of:\")						\
@@ -65,12 +65,12 @@ build-$(EMACS_VERSION) :
 # an .el file to be dependent on all other files because we do not do
 # proper dependency tracking (yet).
 build-$(EMACS_VERSION)/%.elc : %.el $(ELFILES)
-	$(BATCH) --eval '(setq byte-compile-error-on-warn t)'						\
-	         --eval "(setq byte-compile-dest-file-function (lambda (filename)					\
+	$(BATCH) --eval '(setq byte-compile-error-on-warn t)'					\
+	         --eval "(setq byte-compile-dest-file-function (lambda (filename)		\
 	               	       (concat (file-name-directory filename) \"build-\" emacs-version \"/\"	\
-	                      	    (file-name-nondirectory filename) \"c\")))"				\
+	                      	    (file-name-nondirectory filename) \"c\")))"			\
 	         --eval "(when (check-declare-file \"$<\") (kill-emacs 2))" \
-	         -f batch-byte-compile $<								\
+	         -f batch-byte-compile $<							\
 
 build-$(EMACS_VERSION)/build-flag : build-$(EMACS_VERSION) $(patsubst %.el,build-$(EMACS_VERSION)/%.elc,$(ELFILES))
 	touch $@
@@ -89,7 +89,8 @@ check-ert: $(ELCHECKS)
 clean:
 	$(RM) -r build-$(EMACS_VERSION) $(AUTOLOADS) $(AUTOLOADS:.el=.elc) haskell-mode.info dir
 
-info: haskell-mode.info dir
+info: # dir # haskell-mode.info dir
+	echo "skip info"
 
 dir: haskell-mode.info
 	$(INSTALL_INFO) --dir=$@ $<
