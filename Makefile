@@ -44,7 +44,7 @@ all: check-emacs-version compile $(AUTOLOADS) info
 
 check-emacs-version :
 	$(BATCH) --eval "(when (version< emacs-version \"25.1\")				\
-                            (message \"Error: haskell-mode requires Emacs 25.1 or later\"\
+                            (message \"Error: haskell-mode requires Emacs 25.1 or later\")      \
                             (message \"Your version of Emacs is %s\" emacs-version)		\
                             (message \"Found as '$(EMACS)'\")					\
                             (message \"Use one of:\")						\
